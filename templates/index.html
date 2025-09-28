@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Website</title>
+    <style>
+        /* Original Theme (updated: green background) */
+        body.original {
+            background-color: #e8f5e9 !important; /* Màu xanh lá nhạt */
+            color: black;
+            font-family: Arial, sans-serif;
+        }
+
+        /* User Themes */
+        body.dark {
+            background-color: #121212;
+            color: white;
+        }
+
+        body.blue {
+            background-color: #e3f2fd;
+            color: #0d47a1;
+        }
+
+        body.green {
+            background-color: #e8f5e9;
+            color: #1b5e20;
+        }
+
+        /* Video styles */
+        #intro-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 9999;
+        }
+
+        #content {
+            display: none;
+            padding: 20px;
+            text-align: center;
+        }
+
+        select, button {
+            margin: 10px;
+            padding: 8px;
+            font-size: 16px;
+        }
+
+        ul {
+            list-style-type: disc;
+            text-align: left;
+            display: inline-block;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body class="original">
+    <video id="intro-video" autoplay muted>
+        <source src="/static/test.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <div id="content">
+        <h1>Welcome to the Simple Website</h1>
+        <h2>Explore Our Features</h2>
+        <p>This is a modern website with a customizable theme and an engaging intro video. Discover the key features below:</p>
+        <ul>
+            <li>Interactive theme switching with multiple color options.</li>
+            <li>Fullscreen video intro for an immersive experience.</li>
+            <li>Responsive design for all devices.</li>
+            <li>Easy deployment on Render with Flask backend.</li>
+        </ul>
+        
+        <label for="theme-select">Choose a theme:</label>
+        <select id="theme-select">
+            <option value="original">Original (Light Green)</option>
+            <option value="dark">Dark</option>
+            <option value="blue">Blue</option>
+            <option value="green">Green</option>
+        </select>
+        <button onclick="changeTheme()">Apply Theme</button>
+    </div>
+
+    <script>
+        const video = document.getElementById('intro-video');
+        const content = document.getElementById('content');
+
+        // Play video fullscreen on load
+        video.addEventListener('loadedmetadata', () => {
+            try {
+                if (video.requestFullscreen) {
+                    video.requestFullscreen();
+                } else if (video.mozRequestFullScreen) { // Firefox
+                    video.mozRequestFullScreen();
+                } else if (video.webkitRequestFullscreen) { // Chrome, Safari, Opera
+                    video.webkitRequestFullscreen();
+                } else if (video.msRequestFullscreen) { // IE/Edge
+                    video.msRequestFullscreen();
+                }
+            } catch (e) {
+                console.error('Fullscreen request failed:', e);
+                // If fullscreen fails, show content immediately
+                video.style.display = 'none';
+                content.style.display = 'block';
+            }
+        });
+
+        // After video ends, exit fullscreen and show content
+        video.addEventListener('ended', () => {
+            try {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.mozCancelFullScreen) { // Firefox
+                    document.mozCancelFullScreen();
+                } else if (document.webkitExitFullscreen) { // Chrome, Safari, Opera
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) { // IE/Edge
+                    document.msExitFullscreen();
+                }
+            } catch (e) {
+                console.error('Exit fullscreen failed:', e);
+            }
+            video.style.display = 'none';
+            content.style.display = 'block';
+        });
+
+        // Fallback: If video fails to load, show content
+        video.addEventListener('error', () => {
+            console.error('Video failed to load');
+            video.style.display = 'none';
+            content.style.display = 'block';
+        });
+
+        // Theme changer function
+        function changeTheme() {
+            const select = document.getElementById('theme-select');
+            const theme = select.value;
+            document.body.className = theme; // Apply selected theme class
+        }
+    </script>
+</body>
+</html>
